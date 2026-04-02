@@ -11,7 +11,7 @@
   },
   "build": {
     "appId": "com.quiz.lockdown",
-    "productName": "LockDown Quiz",
+    "productName": "LockDownBrowser.",
     "directories": {
       "output": "dist"
     },
@@ -32,8 +32,9 @@
     },
     "win": {
       "target": "portable",
-      "icon": "icon.png",
-      "signAndEditExecutable": false
+      "icon": "icon.ico",
+      "signAndEditExecutable": false,
+      "artifactName": "LockDownBrowser.-${version}.${ext}"
     },
     "dmg": {
       "title": "LockDown Quiz",
