@@ -31,8 +31,9 @@
       "icon": "icon.png"
     },
     "win": {
-      "target": "nsis",
-      "icon": "icon.png"
+      "target": "portable",
+      "icon": "icon.png",
+      "signAndEditExecutable": false
     },
     "dmg": {
       "title": "LockDown Quiz",
