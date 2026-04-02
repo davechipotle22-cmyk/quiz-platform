@@ -1,7 +1,8 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 let mainWindow;
+let isKiosk = false;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -9,13 +10,14 @@ function createWindow() {
     height: 800,
     minWidth: 900,
     minHeight: 600,
-    frame: false,          // Remove default OS chrome — the HTML has its own toolbar
+    frame: false,
     titleBarStyle: 'hidden',
     backgroundColor: '#1a1a1a',
-    icon: path.join(__dirname, 'icon.png'),
+    icon: path.join(__dirname, 'icon.ico'),
     webPreferences: {
       nodeIntegration: false,
-      contextIsolation: true
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
@@ -42,6 +44,27 @@ function createWindow() {
     mainWindow = null;
   });
 }
+
+// Toggle kiosk mode — hides taskbar, notifications, everything
+ipcMain.on('toggle-kiosk', () => {
+  if (!mainWindow) return;
+  isKiosk = !isKiosk;
+  mainWindow.setKiosk(isKiosk);
+  mainWindow.setAlwaysOnTop(isKiosk, 'screen-saver');
+  mainWindow.setFullScreen(isKiosk);
+
+  if (isKiosk) {
+    // Block Alt+Tab, Alt+F4 etc by staying on top
+    mainWindow.setSkipTaskbar(true);
+    mainWindow.setMenuBarVisibility(false);
+    mainWindow.focus();
+  } else {
+    mainWindow.setSkipTaskbar(false);
+  }
+
+  // Notify renderer of state change
+  mainWindow.webContents.send('kiosk-state', isKiosk);
+});
 
 app.whenReady().then(createWindow);
 

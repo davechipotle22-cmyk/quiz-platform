@@ -295,9 +295,105 @@ commands = [
 for cmd in commands:
     story.append(Paragraph(cmd, styles['CodeBlock']))
 
-story.append(Spacer(1, 16))
+# ========================================================
+# SECRET KEYS ANSWER KEY — last page
+# ========================================================
+from reportlab.platypus import PageBreak
+story.append(PageBreak())
+
+story.append(Paragraph("Secret Keys - Answer Key", styles['SectionHeader']))
+story.append(HRFlowable(width="100%", thickness=2, color=HexColor('#e94560')))
+story.append(Spacer(1, 10))
+story.append(Paragraph(
+    "The following secret key combinations are built into the application. "
+    "These are for the instructor/developer only. Do not share with students.",
+    styles['WarningText']
+))
+story.append(Spacer(1, 12))
+
+# Secret key table
+secret_keys_data = [
+    ["Secret Key", "Action", "How to Activate"],
+    [
+        "Developer\nPanel",
+        "Opens the developer panel\nto edit questions and\nset question count",
+        'Click the "Hide Time"\nbutton 3 times\nwithin 1 second'
+    ],
+    [
+        "Lockdown\nMode",
+        "Activates full kiosk mode.\nHides taskbar, notifications,\nand all other windows.\nOnly the quiz is visible.",
+        'Press  S  key, then\npress  Enter  key, then\npress  Enter  key again\n(within 2 seconds)'
+    ],
+]
+
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib import colors
+
+key_table = Table(secret_keys_data, colWidths=[1.1*inch, 2.2*inch, 2.2*inch])
+key_table.setStyle(TableStyle([
+    # Header row
+    ('BACKGROUND', (0, 0), (-1, 0), HexColor('#1a1a2e')),
+    ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('FONTSIZE', (0, 0), (-1, 0), 11),
+    ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+    ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+    ('TOPPADDING', (0, 0), (-1, 0), 10),
+    # Data rows
+    ('BACKGROUND', (0, 1), (-1, -1), HexColor('#f5f5f5')),
+    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+    ('FONTSIZE', (0, 1), (-1, -1), 10),
+    ('TEXTCOLOR', (0, 1), (-1, -1), HexColor('#333333')),
+    ('TOPPADDING', (0, 1), (-1, -1), 10),
+    ('BOTTOMPADDING', (0, 1), (-1, -1), 10),
+    ('LEFTPADDING', (0, 0), (-1, -1), 8),
+    ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    # First column bold
+    ('FONTNAME', (0, 1), (0, -1), 'Helvetica-Bold'),
+    ('TEXTCOLOR', (0, 1), (0, -1), HexColor('#e94560')),
+    # Grid
+    ('GRID', (0, 0), (-1, -1), 1, HexColor('#cccccc')),
+    ('BOX', (0, 0), (-1, -1), 2, HexColor('#1a1a2e')),
+]))
+story.append(key_table)
+
+story.append(Spacer(1, 20))
+
+# Additional notes
+story.append(Paragraph("Important Notes", styles['StepHeader']))
+
+notes = [
+    ["1.", "The Developer Panel secret key only works when NOT typing in an input field."],
+    ["2.", "Lockdown Mode: press S then Enter then Enter in sequence (not held together). "
+           "You have 2 seconds to complete the full sequence."],
+    ["3.", "To EXIT lockdown mode, repeat the same key sequence: S > Enter > Enter."],
+    ["4.", "In the Electron desktop app, lockdown mode hides the Windows taskbar, "
+           "all notifications, and prevents Alt+Tab switching."],
+    ["5.", "In a regular browser, lockdown mode uses fullscreen as a fallback."],
+    ["6.", "A red border appears around the app when lockdown mode is active."],
+]
+
+notes_table = Table(notes, colWidths=[0.3*inch, 5.2*inch])
+notes_table.setStyle(TableStyle([
+    ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+    ('FONTSIZE', (0, 0), (-1, -1), 10),
+    ('TEXTCOLOR', (0, 0), (0, -1), HexColor('#e94560')),
+    ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+    ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+    ('TEXTCOLOR', (1, 0), (1, -1), HexColor('#444444')),
+]))
+story.append(notes_table)
+
+story.append(Spacer(1, 24))
 story.append(HRFlowable(width="100%", thickness=2, color=HexColor('#e94560')))
 story.append(Spacer(1, 8))
+story.append(Paragraph(
+    "CONFIDENTIAL — For instructor use only. Do not distribute this page to students.",
+    styles['WarningText']
+))
+story.append(Spacer(1, 4))
 story.append(Paragraph(
     "Generated for LockDown Quiz Platform v1.0.0",
     styles['Note']

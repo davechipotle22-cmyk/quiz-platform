@@ -1226,6 +1226,65 @@ hideTimeBtn.addEventListener('click', () => {
   }
 });
 
+// ============ LOCKDOWN MODE (KIOSK) ============
+// Secret key: press "s", then "Enter", then "Enter" — locks down the entire screen
+let lockdownSequence = [];
+let lockdownTimeout = null;
+
+document.addEventListener('keydown', (e) => {
+  // Don't capture if typing in an input/textarea
+  const tag = e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+  const key = e.key.toLowerCase();
+
+  if (lockdownSequence.length === 0 && key === 's') {
+    lockdownSequence.push('s');
+    clearTimeout(lockdownTimeout);
+    lockdownTimeout = setTimeout(() => { lockdownSequence = []; }, 2000);
+  } else if (lockdownSequence.length === 1 && lockdownSequence[0] === 's' && key === 'enter') {
+    lockdownSequence.push('enter1');
+    clearTimeout(lockdownTimeout);
+    lockdownTimeout = setTimeout(() => { lockdownSequence = []; }, 2000);
+  } else if (lockdownSequence.length === 2 && lockdownSequence[1] === 'enter1' && key === 'enter') {
+    lockdownSequence = [];
+    clearTimeout(lockdownTimeout);
+    activateLockdown();
+  } else {
+    lockdownSequence = [];
+  }
+});
+
+let lockdownActive = false;
+
+function activateLockdown() {
+  lockdownActive = !lockdownActive;
+
+  // Electron kiosk mode
+  if (window.lockdown && window.lockdown.isElectron) {
+    window.lockdown.toggleKiosk();
+  } else {
+    // Browser fallback — use Fullscreen API
+    if (lockdownActive) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+  }
+
+  // Visual indicator
+  const frame = document.querySelector('.window-frame');
+  if (lockdownActive) {
+    frame.style.border = '3px solid #c0392b';
+    document.body.style.border = '3px solid #c0392b';
+  } else {
+    frame.style.border = '2px solid #3a3a3a';
+    document.body.style.border = '3px solid #1a1a1a';
+  }
+}
+
 // Init
 init();
 </script>
