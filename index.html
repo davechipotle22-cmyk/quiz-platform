@@ -33,6 +33,10 @@
       gap: 4px;
       height: 36px;
       user-select: none;
+      -webkit-app-region: drag; /* Allow dragging the window from the toolbar */
+    }
+    .toolbar button, .toolbar .toolbar-tab {
+      -webkit-app-region: no-drag; /* Buttons remain clickable */
     }
     .toolbar-btn {
       background: linear-gradient(180deg, #fafafa 0%, #e0e0e0 100%);
@@ -591,7 +595,7 @@
   <button class="toolbar-btn">&#9432;</button>
   <button class="toolbar-btn">&#8862;</button>
   <button class="toolbar-btn">&#9776;</button>
-  <button class="toolbar-close-btn">&times;</button>
+  <button class="toolbar-close-btn" onclick="if(window.electronClose){window.electronClose()}else{window.close()}">&times;</button>
 </div>
 <div class="accent-bar"></div>
 
