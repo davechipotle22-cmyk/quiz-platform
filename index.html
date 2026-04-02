@@ -577,6 +577,119 @@
 
     /* Hidden in quiz mode */
     .question-block.hidden { display: none; }
+
+    /* ====== SUBMISSION PAGE ====== */
+    .submission-page { padding: 24px 32px; }
+    .submission-page .submitted-by {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+    .submission-page .exam-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    .submission-page .exam-title .a11y-icon {
+      font-size: 16px;
+      color: #2d8a2d;
+      vertical-align: super;
+      margin-left: 6px;
+    }
+    .submission-page .exam-meta {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 4px;
+      line-height: 1.8;
+    }
+    .submission-page .exam-meta b { color: #333; }
+    .submission-page .instructions-box {
+      border: 1px solid #ccc;
+      padding: 14px 16px;
+      margin: 16px 0;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #444;
+      background: #fafafa;
+      resize: vertical;
+      overflow: auto;
+      max-height: 200px;
+    }
+    .submission-page .locked-text {
+      font-size: 13px;
+      color: #c0392b;
+      margin: 12px 0;
+    }
+    .submission-page .muted-box {
+      border: 1px solid #ddd;
+      padding: 16px 20px;
+      margin: 16px 0;
+      background: #fafafa;
+    }
+    .submission-page .muted-box h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    .submission-page .muted-box p {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .submission-page .sub-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding-top: 12px;
+      border-top: 1px solid #ddd;
+    }
+    .submission-page .sub-nav button {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 6px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 3px;
+      color: #333;
+    }
+    .submission-page .sub-nav button:hover { background: #f0f0f0; }
+    .submission-page .sidebar-right {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.8;
+    }
+    .submission-page .sidebar-right .grading-notice {
+      color: #c0392b;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .submission-page .sidebar-right .add-comment {
+      font-weight: 600;
+      color: #333;
+      margin: 10px 0 6px;
+    }
+    .submission-page .sidebar-right .reactions {
+      font-size: 18px;
+      margin: 6px 0;
+    }
+    .submission-page .sidebar-right .media-link {
+      color: #2d8a2d;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .submission-page .sidebar-right .save-btn {
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      padding: 6px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
@@ -1157,6 +1270,8 @@ function triggerSave() {
 function submitQuiz() {
   if (!confirm('Are you sure you want to submit this quiz?')) return;
   clearInterval(timerInterval);
+
+  // Calculate score
   let score = 0;
   let total = 0;
   quizData.questions.forEach(q => {
@@ -1165,7 +1280,69 @@ function submitQuiz() {
       score += q.points;
     }
   });
-  alert(`Quiz submitted!\nScore: ${score} / ${total} points`);
+
+  // Build submission timestamp
+  const now = new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let hrs = now.getHours();
+  const mins = String(now.getMinutes()).padStart(2, '0');
+  const ampm = hrs >= 12 ? 'pm' : 'am';
+  hrs = hrs % 12 || 12;
+  const submitTime = `${months[now.getMonth()]} ${now.getDate()} at ${hrs}:${mins}${ampm}`;
+
+  // Get elapsed time string
+  const elapsedMins = Math.floor(timerSeconds / 60);
+  const elapsedSecs = timerSeconds % 60;
+
+  // Due time (use start time context)
+  const startedText = document.getElementById('quizStarted').textContent;
+
+  // Replace the entire main container
+  const mainContainer = document.querySelector('.main-container');
+  mainContainer.innerHTML = `
+    <div style="flex:1;overflow-y:auto;">
+      <div class="submission-page">
+        <div class="submitted-by">Student submitted ${submitTime}</div>
+
+        <h1 class="exam-title">${quizData.title} <span class="a11y-icon">&#9854;</span></h1>
+
+        <div class="exam-meta">
+          <b>Due</b> ${submitTime} &nbsp;&nbsp; <b>Points</b> ${total} &nbsp;&nbsp; <b>Questions</b> ${quizData.questions.length}<br>
+          <b>Time Limit</b> 55 Minutes &nbsp;&nbsp; Requires Respondus LockDown Browser
+        </div>
+
+        <h2 style="font-size:20px;font-weight:600;margin:16px 0 8px;">Instructions</h2>
+
+        <div class="instructions-box">
+          The exam will show one question at a time and you have the option to revisit any question
+          during the exam time. You may answer questions in any order.
+        </div>
+
+        <div class="locked-text">This quiz was locked ${submitTime}.</div>
+
+        <div class="muted-box">
+          <h3>Your quiz has been muted</h3>
+          <p>Your quiz score is unavailable because your instructor has not finished grading it. When your
+          instructor finishes grading this quiz, your score will be available on this page.</p>
+        </div>
+
+        <div class="sub-nav">
+          <button>&laquo; Previous</button>
+          <button>Next &raquo;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar" style="min-width:200px;padding:16px;">
+      <div class="sidebar-right">
+        <div class="grading-notice">You may not see all scores now because the assignment is currently being graded.</div>
+        <div class="add-comment">Add a Comment:</div>
+        <div class="reactions">&#128077; &#128069; &#128578;</div>
+        <div class="media-link">&#128266; Media Comment</div>
+        <button class="save-btn">Save</button>
+      </div>
+    </div>
+  `;
 }
 
 // ============ IMPORT/EXPORT ============
