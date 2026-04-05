@@ -318,7 +318,7 @@
     }
     .sidebar .q-links li a {
       text-decoration: none;
-      color: #555;
+      color: #8b1a1a;
       font-size: 14px;
       display: flex;
       align-items: center;
@@ -327,7 +327,8 @@
       border-radius: 3px;
     }
     .sidebar .q-links li a:hover { background: #f0f0f0; }
-    .sidebar .q-links li a.active { font-weight: 700; color: #333; }
+    .sidebar .q-links li a.active { font-weight: 700; color: #5a0000; }
+    .sidebar .q-links li a.spacer-item { font-weight: 700; color: #333; }
     .sidebar .q-links li a .q-icon {
       width: 16px;
       height: 16px;
@@ -338,6 +339,7 @@
       justify-content: center;
       font-size: 9px;
       color: #888;
+      flex-shrink: 0;
     }
     .sidebar .q-links li a.answered .q-icon {
       background: #2ecc71;
@@ -359,10 +361,11 @@
     }
     .timer-section .hide-time {
       font-size: 11px;
-      background: #eee;
-      border: 1px solid #ccc;
-      padding: 2px 8px;
-      border-radius: 3px;
+      background: none;
+      border: none;
+      padding: 0;
+      color: #0770A2;
+      text-decoration: underline;
       cursor: pointer;
       margin-left: 6px;
     }
@@ -370,6 +373,73 @@
       font-size: 14px;
       color: #333;
       margin-top: 4px;
+    }
+
+    /* ====== LEFT SIDEBAR (Canvas nav) ====== */
+    .left-sidebar {
+      width: 200px;
+      min-width: 200px;
+      background: #2D3B45;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .left-sidebar .ls-brand {
+      padding: 16px 14px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      line-height: 1.3;
+    }
+    .left-sidebar .ls-nav {
+      list-style: none;
+      padding: 8px 0;
+      flex: 1;
+    }
+    .left-sidebar .ls-nav li a {
+      display: block;
+      padding: 9px 16px;
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 13px;
+      line-height: 1.3;
+      transition: background 0.15s;
+    }
+    .left-sidebar .ls-nav li a:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+    .left-sidebar .ls-nav li a.ls-active {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-weight: 600;
+      border-left: 3px solid #E66000;
+      padding-left: 13px;
+    }
+
+    /* ====== BREADCRUMB ====== */
+    .breadcrumb {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .breadcrumb a {
+      color: #0770A2;
+      text-decoration: none;
+    }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .bc-sep { margin: 0 5px; color: #aaa; }
+    .breadcrumb #breadcrumbTitle {
+      display: inline-block;
+      max-width: 350px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
     }
 
     /* ====== DEVELOPER PANEL ====== */
@@ -704,7 +774,34 @@
 
 <!-- Main Layout -->
 <div class="main-container">
+
+  <!-- LEFT SIDEBAR (Canvas nav) -->
+  <div class="left-sidebar" id="leftSidebar">
+    <div class="ls-brand">KERAZA LOCKDOWN</div>
+    <ul class="ls-nav">
+      <li><a href="#" class="ls-active" onclick="return false;">Home</a></li>
+      <li><a href="#" onclick="return false;">Announcements</a></li>
+      <li><a href="#" onclick="return false;">Access Pearson</a></li>
+      <li><a href="#" onclick="return false;">Syllabus</a></li>
+      <li><a href="#" onclick="return false;">Modules</a></li>
+      <li><a href="#" onclick="return false;">Grades</a></li>
+      <li><a href="#" onclick="return false;">Assignments</a></li>
+      <li><a href="#" onclick="return false;">Survey of Student Learning Experience</a></li>
+      <li><a href="#" onclick="return false;">SSLE Center (Instructor)</a></li>
+      <li><a href="#" onclick="return false;">Library Link</a></li>
+    </ul>
+  </div>
+
   <div class="content-area" id="contentArea">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="#" onclick="return false;">Course Name</a>
+      <span class="bc-sep">&gt;</span>
+      <a href="#" onclick="return false;">Quizzes</a>
+      <span class="bc-sep">&gt;</span>
+      <span id="breadcrumbTitle">Lockdown Browser Practice Quiz</span>
+    </div>
+
     <!-- Quiz Header -->
     <h1 class="quiz-title" id="quizTitle">Lockdown Browser Practice Quiz- Requires Respondus LockDown Browser <span class="a11y-icon">&#9854;</span></h1>
     <div class="quiz-started" id="quizStarted">Started: Mar 30 at 3:55<span id="pmTrigger">pm</span></div>
@@ -722,7 +819,7 @@
 
     <!-- Bottom bar -->
     <div class="bottom-bar">
-      <span class="saving-text" id="savingText"></span>
+      <span class="saving-text" id="savingText">Not saved</span>
       <button class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
     </div>
   </div>
@@ -732,9 +829,9 @@
     <h3>Questions</h3>
     <ul class="q-links" id="questionLinks"></ul>
     <div class="timer-section">
-      <span class="timer-label">Time Running:</span>
+      <span class="timer-label">Time Elapsed:</span>
       <button class="hide-time" id="hideTimeBtn" onclick="toggleTimer()">Hide Time</button>
-      <div class="timer-display" id="timerDisplay">00:00:00</div>
+      <div class="timer-display" id="timerDisplay">0 Minutes, 0 Seconds</div>
     </div>
   </div>
 </div>
@@ -759,6 +856,50 @@
         <button class="dev-btn" onclick="setQuestionCount()">Apply</button>
       </div>
       <div style="font-size:11px;color:#666;margin-top:4px;">Max 100 questions</div>
+    </div>
+
+    <!-- Quiz Settings -->
+    <div class="dev-section">
+      <h3>Quiz Settings</h3>
+      <div class="dev-field">
+        <label>Quiz Title</label>
+        <input type="text" id="devQuizTitle" value="Lockdown Browser Practice Quiz- Requires Respondus LockDown Browser" style="width:100%;background:#0f0f23;border:1px solid #333;color:#e0e0e0;padding:6px;border-radius:4px;font-size:13px;">
+        <button class="dev-btn" onclick="updateQuizTitle()" style="margin-top:6px;">Apply Title</button>
+      </div>
+      <div class="dev-field" style="margin-top:10px;">
+        <label>Time Limit (minutes, 0=unlimited)</label>
+        <input type="number" id="devTimeLimit" value="55" min="0" style="width:80px;background:#0f0f23;border:1px solid #333;color:#e0e0e0;padding:6px;border-radius:4px;font-size:13px;">
+      </div>
+      <div class="dev-field" style="margin-top:10px;">
+        <label>Timer Mode</label>
+        <select id="devTimerMode" style="background:#0f0f23;border:1px solid #333;color:#e0e0e0;padding:6px;border-radius:4px;font-size:13px;">
+          <option value="countup">Count Up</option>
+          <option value="countdown">Count Down</option>
+        </select>
+        <button class="dev-btn" onclick="updateTimerSettings()" style="margin-top:6px;">Apply Timer</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="dev-btn secondary" id="pauseTimerBtn" onclick="pauseResumeTimer()">Pause</button>
+        <button class="dev-btn secondary" onclick="resetTimer()">Reset Timer</button>
+      </div>
+      <div class="dev-field" style="margin-top:12px;">
+        <label>Display Mode</label>
+        <select id="devOneAtATime" style="background:#0f0f23;border:1px solid #333;color:#e0e0e0;padding:6px;border-radius:4px;font-size:13px;">
+          <option value="true">One at a Time</option>
+          <option value="false">All at Once</option>
+        </select>
+        <button class="dev-btn" onclick="updateDisplayMode()" style="margin-top:6px;">Apply</button>
+      </div>
+    </div>
+
+    <!-- Import / Export -->
+    <div class="dev-section">
+      <h3>Import / Export</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="dev-btn green" onclick="exportQuiz()">Export JSON</button>
+        <button class="dev-btn secondary" onclick="importQuiz()">Import JSON</button>
+        <button class="dev-btn" onclick="addQuestion()">+ Add Question</button>
+      </div>
     </div>
 
     <!-- Question List -->
@@ -860,7 +1001,12 @@ function init() {
   renderSidebar();
   renderDevQuestions();
   startTimer();
-  updateDisplayMode();
+  // Guard: devOneAtATime element only exists after dev panel settings are added
+  const modeEl = document.getElementById('devOneAtATime');
+  if (modeEl) { quizData.showOneAtATime = modeEl.value === 'true'; renderQuestions(); }
+  // Sync breadcrumb to initial title
+  const bc = document.getElementById('breadcrumbTitle');
+  if (bc) bc.textContent = quizData.title;
 }
 
 // ============ RENDER ============
@@ -922,13 +1068,19 @@ function renderQuestions() {
 function renderSidebar() {
   const links = document.getElementById('questionLinks');
   links.innerHTML = '';
+
+  // Canvas-style "Spacer" item at top
+  const spacerLi = document.createElement('li');
+  spacerLi.innerHTML = '<a href="#" class="spacer-item" onclick="return false;"><span class="q-icon">?</span> Spacer</a>';
+  links.appendChild(spacerLi);
+
   quizData.questions.forEach((q, i) => {
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.href = '#';
     a.className = q.selectedAnswer !== null ? 'answered' : '';
     if (i === currentQuestion) a.classList.add('active');
-    a.innerHTML = `<span class="q-icon">?</span> Question ${i + 1}`;
+    a.innerHTML = `<span class="q-icon">&#9873;</span> Question ${i + 1}`;
     a.onclick = (e) => { e.preventDefault(); goToQuestion(i); };
     li.appendChild(a);
     links.appendChild(li);
@@ -1018,8 +1170,11 @@ function updateTimerDisplay() {
   const hrs = Math.floor(s / 3600);
   const mins = Math.floor((s % 3600) / 60);
   const secs = s % 60;
-  const pad = (n) => String(n).padStart(2, '0');
-  document.getElementById('timerDisplay').textContent = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+  const parts = [];
+  if (hrs > 0) parts.push(`${hrs} Hour${hrs !== 1 ? 's' : ''}`);
+  parts.push(`${mins} Minute${mins !== 1 ? 's' : ''}`);
+  parts.push(`${secs} Second${secs !== 1 ? 's' : ''}`);
+  document.getElementById('timerDisplay').textContent = parts.join(', ');
 }
 
 function toggleTimer() {
@@ -1055,6 +1210,8 @@ function toggleDevPanel() {
 function updateQuizTitle() {
   quizData.title = document.getElementById('devQuizTitle').value;
   document.getElementById('quizTitle').innerHTML = quizData.title + ' <span class="a11y-icon">&#9854;</span>';
+  const bc = document.getElementById('breadcrumbTitle');
+  if (bc) bc.textContent = quizData.title;
 }
 
 // ============ QUESTION EDITING ============
@@ -1290,6 +1447,21 @@ function submitQuiz() {
   // Replace the entire main container
   const mainContainer = document.querySelector('.main-container');
   mainContainer.innerHTML = `
+    <div class="left-sidebar" id="leftSidebar">
+      <div class="ls-brand">KERAZA LOCKDOWN</div>
+      <ul class="ls-nav">
+        <li><a href="#" class="ls-active" onclick="return false;">Home</a></li>
+        <li><a href="#" onclick="return false;">Announcements</a></li>
+        <li><a href="#" onclick="return false;">Access Pearson</a></li>
+        <li><a href="#" onclick="return false;">Syllabus</a></li>
+        <li><a href="#" onclick="return false;">Modules</a></li>
+        <li><a href="#" onclick="return false;">Grades</a></li>
+        <li><a href="#" onclick="return false;">Assignments</a></li>
+        <li><a href="#" onclick="return false;">Survey of Student Learning Experience</a></li>
+        <li><a href="#" onclick="return false;">SSLE Center (Instructor)</a></li>
+        <li><a href="#" onclick="return false;">Library Link</a></li>
+      </ul>
+    </div>
     <div style="flex:1;overflow-y:auto;">
       <div class="submission-page">
         <div class="submitted-by">Student submitted ${submitTime}</div>
