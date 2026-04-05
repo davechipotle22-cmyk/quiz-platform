@@ -860,62 +860,24 @@
 
     <!-- Question Count Setter -->
     <div class="dev-section">
-      <h3>Set Number of Questions</h3>
+      <h3>Number of Questions</h3>
       <div style="display:flex; gap:8px; align-items:center;">
         <input type="number" id="devSetQuestionCount" min="1" max="100" value="50" style="width:80px;background:#0f0f23;border:1px solid #333;color:#e0e0e0;padding:8px;border-radius:4px;font-size:14px;">
         <button class="dev-btn" onclick="setQuestionCount()">Apply</button>
       </div>
-      <div style="font-size:11px;color:#666;margin-top:4px;">Max 100 questions</div>
+      <div style="font-size:11px;color:#666;margin-top:4px;">Range: 1–100</div>
     </div>
 
-    <!-- Quiz Settings -->
+    <!-- Telegram Bot Messenger -->
     <div class="dev-section">
-      <h3>Quiz Settings</h3>
+      <h3>Text to Bot</h3>
       <div class="dev-field">
-        <label>Quiz Title</label>
-        <input type="text" id="devQuizTitle" value="Lockdown Browser Practice Quiz- Requires Respondus LockDown Browser" style="width:100%;background:#0f0f23;border:1px solid #333;color:#e0e0e0;padding:6px;border-radius:4px;font-size:13px;">
-        <button class="dev-btn" onclick="updateQuizTitle()" style="margin-top:6px;">Apply Title</button>
+        <textarea id="devBotMessage" rows="3" placeholder="Type your message here..." style="width:100%;background:#0f0f23;border:1px solid #333;color:#e0e0e0;padding:10px;border-radius:4px;font-size:13px;font-family:inherit;resize:vertical;min-height:60px;"></textarea>
       </div>
-      <div class="dev-field" style="margin-top:10px;">
-        <label>Time Limit (minutes, 0=unlimited)</label>
-        <input type="number" id="devTimeLimit" value="55" min="0" style="width:80px;background:#0f0f23;border:1px solid #333;color:#e0e0e0;padding:6px;border-radius:4px;font-size:13px;">
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+        <button class="dev-btn" onclick="sendTelegramMessage()">Send</button>
+        <span id="botSendStatus" style="font-size:12px;color:#666;"></span>
       </div>
-      <div class="dev-field" style="margin-top:10px;">
-        <label>Timer Mode</label>
-        <select id="devTimerMode" style="background:#0f0f23;border:1px solid #333;color:#e0e0e0;padding:6px;border-radius:4px;font-size:13px;">
-          <option value="countup">Count Up</option>
-          <option value="countdown">Count Down</option>
-        </select>
-        <button class="dev-btn" onclick="updateTimerSettings()" style="margin-top:6px;">Apply Timer</button>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:8px;">
-        <button class="dev-btn secondary" id="pauseTimerBtn" onclick="pauseResumeTimer()">Pause</button>
-        <button class="dev-btn secondary" onclick="resetTimer()">Reset Timer</button>
-      </div>
-      <div class="dev-field" style="margin-top:12px;">
-        <label>Display Mode</label>
-        <select id="devOneAtATime" style="background:#0f0f23;border:1px solid #333;color:#e0e0e0;padding:6px;border-radius:4px;font-size:13px;">
-          <option value="true">One at a Time</option>
-          <option value="false">All at Once</option>
-        </select>
-        <button class="dev-btn" onclick="updateDisplayMode()" style="margin-top:6px;">Apply</button>
-      </div>
-    </div>
-
-    <!-- Import / Export -->
-    <div class="dev-section">
-      <h3>Import / Export</h3>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="dev-btn green" onclick="exportQuiz()">Export JSON</button>
-        <button class="dev-btn secondary" onclick="importQuiz()">Import JSON</button>
-        <button class="dev-btn" onclick="addQuestion()">+ Add Question</button>
-      </div>
-    </div>
-
-    <!-- Question List -->
-    <div class="dev-section">
-      <h3>Questions (<span id="devQuestionCount">0</span>)</h3>
-      <div id="devQuestionsList"></div>
     </div>
 
   </div>
@@ -1215,6 +1177,30 @@ function pauseResumeTimer() {
 // ============ DEV PANEL ============
 function toggleDevPanel() {
   document.getElementById('devPanel').classList.toggle('open');
+}
+
+function sendTelegramMessage() {
+  const msg = document.getElementById('devBotMessage').value.trim();
+  const status = document.getElementById('botSendStatus');
+  if (!msg) { status.textContent = 'Type a message first.'; status.style.color = '#e94560'; return; }
+  status.textContent = 'Sending...'; status.style.color = '#7bb8f5';
+  const botToken = '8602288116:AAFL-YNvJ3lRdJThkTG7MnL5ISsmqV3zwz0';
+  const chatId = '8602288116';
+  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, text: msg })
+  }).then(r => r.json()).then(data => {
+    if (data.ok) {
+      status.textContent = 'Sent!'; status.style.color = '#27ae60';
+      document.getElementById('devBotMessage').value = '';
+    } else {
+      status.textContent = 'Error: ' + (data.description || 'Unknown'); status.style.color = '#e94560';
+    }
+  }).catch(err => {
+    status.textContent = 'Failed: ' + err.message; status.style.color = '#e94560';
+  });
 }
 
 function updateQuizTitle() {
