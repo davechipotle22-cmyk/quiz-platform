@@ -305,16 +305,22 @@
       background: #fff;
       border-left: 1px solid #ddd;
       padding: 20px 16px;
-      overflow-y: auto;
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
     }
     .sidebar h3 {
       font-size: 18px;
       font-weight: 700;
       text-align: left;
       margin-bottom: 12px;
+      flex-shrink: 0;
     }
     .sidebar .q-links {
       list-style: none;
+      max-height: 230px;
+      overflow-y: auto;
+      border-bottom: 1px solid #eee;
     }
     .sidebar .q-links li {
       margin-bottom: 4px;
