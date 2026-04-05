@@ -11,16 +11,18 @@
       background: #2b2b2b;
       color: #333;
       border: 3px solid #1a1a1a;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
     }
 
     /* Window frame border */
     .window-frame {
       border: 2px solid #3a3a3a;
       background: #f5f5f5;
-      min-height: calc(100vh - 6px);
+      height: calc(100vh - 6px);
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
     /* Top toolbar - mimics Lockdown Browser chrome */
@@ -100,6 +102,7 @@
       max-width: 100%;
       flex: 1;
       min-height: 0;
+      overflow: hidden;
     }
 
     /* Content area */
@@ -305,9 +308,9 @@
       overflow-y: auto;
     }
     .sidebar h3 {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 700;
-      text-align: center;
+      text-align: left;
       margin-bottom: 12px;
     }
     .sidebar .q-links {
@@ -350,28 +353,30 @@
     /* Timer */
     .timer-section {
       margin-top: 20px;
-      text-align: center;
+      text-align: left;
       border-top: 1px solid #eee;
       padding-top: 14px;
     }
     .timer-section .timer-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #555;
+      font-size: 14px;
+      font-weight: 700;
+      color: #333;
     }
     .timer-section .hide-time {
       font-size: 11px;
-      background: none;
-      border: none;
-      padding: 0;
-      color: #0770A2;
-      text-decoration: underline;
+      background: #eee;
+      border: 1px solid #ccc;
+      padding: 2px 8px;
+      border-radius: 3px;
       cursor: pointer;
       margin-left: 6px;
+      color: #333;
+      text-decoration: none;
     }
+    .timer-section .hide-time:hover { background: #ddd; }
     .timer-section .timer-display {
       font-size: 14px;
-      color: #333;
+      color: #8b1a1a;
       margin-top: 4px;
     }
 
