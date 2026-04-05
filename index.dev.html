@@ -785,32 +785,7 @@
 <!-- Main Layout -->
 <div class="main-container">
 
-  <!-- LEFT SIDEBAR (Canvas nav) -->
-  <div class="left-sidebar" id="leftSidebar">
-    <div class="ls-brand">KERAZA LOCKDOWN</div>
-    <ul class="ls-nav">
-      <li><a href="#" class="ls-active" onclick="return false;">Home</a></li>
-      <li><a href="#" onclick="return false;">Announcements</a></li>
-      <li><a href="#" onclick="return false;">Access Pearson</a></li>
-      <li><a href="#" onclick="return false;">Syllabus</a></li>
-      <li><a href="#" onclick="return false;">Modules</a></li>
-      <li><a href="#" onclick="return false;">Grades</a></li>
-      <li><a href="#" onclick="return false;">Assignments</a></li>
-      <li><a href="#" onclick="return false;">Survey of Student Learning Experience</a></li>
-      <li><a href="#" onclick="return false;">SSLE Center (Instructor)</a></li>
-      <li><a href="#" onclick="return false;">Library Link</a></li>
-    </ul>
-  </div>
-
   <div class="content-area" id="contentArea">
-    <!-- Breadcrumb -->
-    <div class="breadcrumb">
-      <a href="#" onclick="return false;">Course Name</a>
-      <span class="bc-sep">&gt;</span>
-      <a href="#" onclick="return false;">Quizzes</a>
-      <span class="bc-sep">&gt;</span>
-      <span id="breadcrumbTitle">Lockdown Browser Practice Quiz</span>
-    </div>
 
     <!-- Quiz Header -->
     <h1 class="quiz-title" id="quizTitle">Lockdown Browser Practice Quiz- Requires Respondus LockDown Browser <span class="a11y-icon">&#9854;</span></h1>
@@ -822,7 +797,7 @@
     <div id="questionsContainer"></div>
 
     <!-- Navigation -->
-    <div class="nav-buttons" id="navButtons">
+    <div class="nav-buttons" id="navButtons" style="display:none;">
       <button class="nav-btn prev" id="prevBtn" onclick="navigateQuestion(-1)" style="display:none;">&laquo; Previous</button>
       <button class="nav-btn" id="nextBtn" onclick="navigateQuestion(1)">Next &raquo;</button>
     </div>
@@ -961,7 +936,7 @@ let quizData = {
   title: "Lockdown Browser Practice Quiz- Requires Respondus LockDown Browser",
   timeLimit: 55, // minutes, 0 = unlimited
   timerMode: "countup",
-  showOneAtATime: true,
+  showOneAtATime: false,
   questions: generateBlankQuestions(50)
 };
 
@@ -1448,21 +1423,6 @@ function submitQuiz() {
   // Replace the entire main container
   const mainContainer = document.querySelector('.main-container');
   mainContainer.innerHTML = `
-    <div class="left-sidebar" id="leftSidebar">
-      <div class="ls-brand">KERAZA LOCKDOWN</div>
-      <ul class="ls-nav">
-        <li><a href="#" class="ls-active" onclick="return false;">Home</a></li>
-        <li><a href="#" onclick="return false;">Announcements</a></li>
-        <li><a href="#" onclick="return false;">Access Pearson</a></li>
-        <li><a href="#" onclick="return false;">Syllabus</a></li>
-        <li><a href="#" onclick="return false;">Modules</a></li>
-        <li><a href="#" onclick="return false;">Grades</a></li>
-        <li><a href="#" onclick="return false;">Assignments</a></li>
-        <li><a href="#" onclick="return false;">Survey of Student Learning Experience</a></li>
-        <li><a href="#" onclick="return false;">SSLE Center (Instructor)</a></li>
-        <li><a href="#" onclick="return false;">Library Link</a></li>
-      </ul>
-    </div>
     <div style="flex:1;overflow-y:auto;">
       <div class="submission-page">
         <div class="submitted-by">Student submitted ${submitTime}</div>
